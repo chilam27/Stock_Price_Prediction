@@ -31,7 +31,7 @@ del df['Stock Splits']
 doji = []
 for i in range(df.shape[0]):
     diff1 = abs(df.Open[i] - df.Close[i])
-    diff2 = (df.High[i] - df.Low[i]) * 0.1
+    diff2 = (df.High[i] - df.Low[i]) * 0.01
     if diff1 <= diff2:
         candle = 1
     else:
@@ -119,20 +119,136 @@ df['shooting_star'] = shooting_star
 df.shooting_star.value_counts()
 
 ##One white solider pattern
+white_solider = []
+for i in range(df.shape[0]):
+    body = df.Close[i] - df.Open[i]
+    if body > 0 and abs(body) >= (np.mean(average_body)*1.5) and df.Open[i] > df.Close[i-1] and df.Close[i] > df.Open[i-1]:
+        candle = 1
+    else:
+        candle = 0
+    white_solider.append(candle)
 
+df['white_solider'] = white_solider
+df.white_solider.value_counts()
 
 ##One black crow
+black_crow = []
+for i in range(df.shape[0]):
+    body = df.Close[i] - df.Open[i]
+    if body < 0 and abs(body) >= (np.mean(average_body)*1.5) and df.Open[0] < df.Close[i-1] and df.Close[i] < df.Open[i-1]:
+        candle = 1
+    else:
+        candle = 0
+    black_crow.append(candle)
 
+df['black_crow'] = black_crow
+df.black_crow.value_counts()
 
 ##Bullish engulfing pattern
+bull_engulf = []
+for i in range(df.shape[0]):
+    body = df.Close[i] - df.Open[i]
+    try:
+        if body > 0 and df.Open[0] < df.Low[i-1] and df.Close[i] > df.High[i-1] and (df.Close[i-1] - df.Open[i-1]) < 0:
+            candle = 1
+        else:
+            candle = 0
+    except:
+        candle = 0
+    bull_engulf.append(candle)
 
+df['bull_engulf'] = bull_engulf
+df.bull_engulf.value_counts()
 
 ##Bearish engulfing pattern
+bear_engulf = []
+for i in range(df.shape[0]):
+    body = df.Close[i] - df.Open[i]
+    try:
+        if body < 0 and df.Open[i] > df.High[i-1] and df.Close[i] < df.Low[i-1] and (df.Close[i-1] - df.Open[i-1]) > 0:
+            candle = 1
+        else:
+            candle = 0
+    except:
+        candle = 0
+    bear_engulf.append(candle)
 
+df['bear_engulf'] = bear_engulf
+df.bear_engulf.value_counts()
+
+#Tweezer top
+tweezer_top = []
+for i in range(df.shape[0]):
+    try:
+        if df.High[i-1] == df.High[i]:
+            candle = 1
+        else:
+            candle = 0
+    except:
+        candle = 0
+    tweezer_top.append(candle)
+    
+df['tweezer_top'] = tweezer_top
+df.tweezer_top.value_counts()
+
+#Tweezer bottom
+tweezer_bottom = []
+for i in range(df.shape[0]):
+    try:
+        if df.Low[i-1] == df.Low[i]:
+            candle = 1
+        else:
+            candle = 0
+    except:
+        candle = 0
+    tweezer_bottom.append(candle)
+    
+df['tweezer_bottom'] = tweezer_bottom
+df.tweezer_bottom.value_counts()
 
 ##Evening star reversal pattern
-
+evening_star = []
+for i in range(df.shape[0]):
+    try:
+        body = df.Close[i-2] - df.Open[i-2]
+        body1 = df.Close[i-1] - df.Open[i-1]
+        body2 = df.Close[i] - df.Open[i]
+        if body > 0 and body1 < 0 and body2 < 0 and df.Low[i-1] > df.High[i-2] and df.High[i] < df.Open[i-1]:
+            candle = 1
+        else:
+            candle = 0
+    except:
+        candle = 0
+    evening_star.append(candle)
+    
+df['evening_star'] = evening_star
+df.evening_star.value_counts()
 
 ##Morning star reversal pattern
+morning_star = []
+for i in range(df.shape[0]):
+    try:
+        body = df.Close[i-2] - df.Open[i-2]
+        body1 = df.Close[i-1] - df.Open[i-1]
+        body2 = df.Close[i] - df.Open[i]
+        if body < 0 and body1 > 0 and body2 > 0 and df.Close[i-1] < df.Low[i-2] and df.High[i-1] < df.Open[i]:
+            candle = 1
+        else:
+            candle = 0
+    except:
+        candle = 0
+    morning_star.append(candle)
+    
+df['morning_star'] = morning_star
+df.morning_star.value_counts()
+
+##Exponential Moving average
+exp20 = df.Close.ewm(20).mean()
+exp105 = df.Close.ewm(105).mean()
+
+df['exp20'] = exp20
+df['exp105'] = exp105
 
 
+#Export to csv file
+df.to_csv('stock_cleaned.csv', index=False)
