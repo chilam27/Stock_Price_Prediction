@@ -8,15 +8,15 @@ Created on Mon Jul 20 21:53:04 2020
 #Import modules
 import numpy as np
 import yfinance as yf
-import mplfinance as fplt
+import mplfinance as mpf
 import random
 random.seed(1)
 
 
 #Read in data
-tickerSymbol = 'AAPL'
+tickerSymbol = 'HSBC'
 tickerData = yf.Ticker(tickerSymbol)
-df = tickerData.history(period='1d', start='2010-1-1', end='2020-1-25')
+df = tickerData.history(period='1d', start='1995-5-12', end='2020-7-27')
 
 
 #Data cleaning:
@@ -24,21 +24,21 @@ tickerData.info
 tickerData.calendar
 recommendation = tickerData.recommendations
 
-df.reset_index(level=0, inplace = True) # Turn data frame index to column "Date"
-
-del df['Stock Splits']
-
 
 #Feature engineer
+df.reset_index(level=0, inplace = True) # turn data frame index to column "Date"
+
 def candle_stick(var):
     ind = df.Date[df[var] == 1].index.tolist()
-    df.set_index('Date')
-    lis = random.sample(ind, 3)
+    if len(ind) > 2:
+        lis = random.sample(ind, 2)
+    else:
+        lis = random.sample(ind, len(ind))
     
     for i in range(2):        
         df1 = df.iloc[lis[i]-10:lis[i]+10,:5]
         df1 = df1.set_index('Date')
-        fplt.plot(df1, type = 'candle', title = 'doji candle ' + str(i+1), ylabel='Price ($)')
+        mpf.plot(df1, type = 'candle', title = var + str(i+1), ylabel='Price ($)')
 
 ##Doji/ spinning top/ high wave
 doji = []
@@ -93,7 +93,7 @@ for i in range(df.shape[0]):
 
 for i in range(df.shape[0]):
     body = df.Close[i] - df.Open[i]
-    if body > 0 and df.High[i] <= (df.Close[i] + (df.High[i] - df.Low[i])*0.1) and df.Low[i] <= (df.Open[i] + (df.High[i] - df.Low[i])*0.1) and abs(body) >= np.mean(average_body) * 1.5:
+    if body > 0 and df.High[i] == df.Close[i] and df.Low[i] == df.Open[i] and abs(body) >= np.mean(average_body) * 1.5:
         bull = 1
     else:
         bull = 0
@@ -101,7 +101,7 @@ for i in range(df.shape[0]):
     
 for i in range(df.shape[0]):
     body = df.Close[i] - df.Open[i]
-    if body < 0 and df.High[i] <= (df.Open[i] + (df.High[i] - df.Low[i])*0.1) and df.Low[i] >= (df.Close[i] - (df.High[i] - df.Low[i])*0.1) and abs(body) >= np.mean(average_body)*1.5:
+    if body < 0 and df.High[i] == df.Open[i] and df.Low[i] == df.Close[i] and abs(body) >= np.mean(average_body)*1.5:
         bear = 1
     else:
         bear = 0
@@ -118,7 +118,7 @@ candle_stick('bear_marubozu')
 ##Hammer candle
 hammer = []
 for i in range(df.shape[0]):
-    if df.High[i] <= (df.Open[i] + (df.High[i] - df.Low[i])*0.1) and (df.Close[i] - df.Low[i]) > (abs(df.Close[i] - df.Open[i])*1.5):
+    if df.High[i] <= df.Open[i] and (df.Close[i] - df.Low[i]) > (abs(df.Close[i] - df.Open[i])*1.5) and abs(df.Open[i] - df.Close[i]) > 0:
         candle = 1
     else:
         candle = 0
@@ -291,5 +291,11 @@ df['exp20'] = exp20
 df['exp105'] = exp105
 
 
+##Percentage change
+percent_change = df.Close.pct_change()
+
+df['percent_change'] = percent_change
+
+
 #Export to csv file
-df.to_csv('stock_cleaned.csv', index=False)
+df.to_csv('stock_cleaned.csv')
