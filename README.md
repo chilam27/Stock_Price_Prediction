@@ -4,16 +4,16 @@ Predicting stock prices using deep learning model
 
 ## Table of Contents
 
-* [Backgorund and Motivation](##BackgorundandMotivation)
-* [Prerequisites](##Prerequisites)
-* [Project Outline](##ProjectOutline)
-  * [Data Wrangling](###DataWrangling)
-  * [Exploratory Data Analysis](###EDA)
-  * [Model Building](###DataWrangling)
-  * [Overall Model Performance](###OverallModelPerformance)
-* [Conclusion](##Conclusion)
-* [Author](##Author)
-* [Acknowledgments](##Acknowledgments)
+* [Backgorund and Motivation](#backgorund-and-motivation)
+* [Prerequisites](#prerequisites)
+* [Project Outline](#project-outline)
+  * [Data Wrangling](#data-wrangling)
+  * [Exploratory Data Analysis](#eda)
+  * [Model Building](#model-building)
+  * [Overall Model Performance](#overall-model-performance)
+* [Conclusion](#conclusion)
+* [Author](#author)
+* [Acknowledgments](#acknowledgments)
 
 ## Backgorund and Motivation
 
