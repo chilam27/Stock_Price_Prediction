@@ -38,14 +38,89 @@ Packages: numpy, yfinance, mplfinance, random, pandas, matplotlib, seaborn, skle
 
 ## Project Outline
 
-1. Data Wrangling: I got stock price data of HSBC bank from a Python library called `yfinance` and created 18 additional indicators acted as variables based on the stock prices.
-
+1. Data Wrangling: I got stock price data of HSBC bank from a Python library called `yfinance` and created 18 additional indicators acted as variables based on the stock prices. All candlestick related knocwledge that I used is based on Jerremy's ebook: ["EVERYTHING YOU NEED TO KNOW ABOUT CANDLESTICKS"](https://dashboard.reallifetrading.com/assets/pdf/candlesticks.pdf).
 2. Exploratory Data Analysis (EDA): plotting three different plots showing: long-term trend, short-term trend, and current trend. I also created a candlestick chart using `mplfinance` library. Then, I implemented a simple trading plan only using moving averages and plotted it.
-
 3. Model Building: first, I normalized the data and split them into train and test data set. Then, I built a stacked LSTM model and plot the prediction. Lastly, I did the same step as previously but try to predict the prices of the next 30 days and plot it. The performance metric I used for my model is the mean squared error.
 
 ### [Data Wrangling](https://github.com/chilam27/Stock_Price_Prediction/blob/master/P04_DataWrangling.py)
 
+- Through `yfinance` library, I got stock prices of ticker "HSBC" from May 12th, 1995 to July 27th, 2020.
+
+<p align="center">
+  <img width="500" height="300" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f1.png">
+</p>
+
+- I turned the data frame index to a new column "Date".
+- To preapre for candlesticks visualization, I created a function ("candle_stick") with the `mplfinance` library embedded. This function will return maximum two candlestick plots of the candlestick's pattern. For easy use, I made it so whatever the candlestick or pattern will be the candle(s) in the middle of the graph. Along with it will be ten extra days of data before and after the candlestick/ pattern happened.
+- I created a list to get body sizes of every candles (the absolute value of difference between open and close price of the day). This became handy latter on when I need to find the mean of body size.
+
+Below are formulas that I used to create differnt candlesticks/ patterns and its plots:
+
+_Please note that, in some way, canddlestick can be seen as a form of art: meaning that there is no set in stone functions that define every candlesticks/ patterns. Functions I used for this project are very simple and straightforawrd._
+
+- Doji candle: a candle without a body. Function: absolute value or the difference between open and close price of the day equals zero.
+
+<img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f2a.png"> <img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f2b.png">
+
+- Shaved bottom: A candle without a lower wick. Function: the closing price equals the low price of the day.
+
+<img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f3a.png"> <img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f3b.png">
+
+- Shaved top: A candle without a upper wick. Function: the open price equals the high price of the day.
+
+<img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f4a.png"> <img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f4b.png">
+
+- Bullish marubozu candle: white shaved bottom and top candle with a size much larger than the average candle. Function: difference between close and open price need to be positive and bigger than the averahe candle by 1.5 times, high equals close and low equals open price of the day.
+
+<img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f5a.png"> <img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f5b.png">
+
+- Bearish marubozu candle: black cnadle version of bullish marubozu candle. Function: difference between close and open price need to be negative and bigger than the averahe candle by 1.5 times, high equals open and low equals close price of the day.
+
+<img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f6a.png"> <img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f6b.png">
+
+- Hammer candle:  the lower wick of the candle should be about two times the size of the candle body; the candle still has a body but no upper wick. Function: high euqals open price of the day, the difference of the close and low price is bigger than the difference of close and open prices multiplies by 1.5 time.
+
+<img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f7a.png"> <img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f7b.png">
+
+- Shooting star candle: the inverted hammer candle. Function: low equals close price of the day, the difference of high and open price is bigger than the absolute value of the difference between open and close price multiplies by 1.5 times.
+
+<img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f8a.png"> <img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f8b.png">
+
+- #One white solider pattern: the open of a white candle has to be above the close of the previous day black candle and The close of the white candle has to be above the open of the previous day candle. Function: the difference between close and open price needs to be postive and bigger than average candle by 1.5 times, open of the candle needs to be bigger than the close price of previous candle and close of the candle needs to be bigger than the open price of the previous candle.
+
+<img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f9a.png"> <img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f9b.png">
+
+- One black crow: the open of a black candle has to be below the close of the previous day and the close of the black candle has to be below the open of the previous day. Function: the difference between close and open price needs to be negative and its absolute value needs to be bigger than average candle by 1.5 times, open of the candle needs to be smaller than the close price of previous candle and close of the candle needs to be smaller than the open price of the previous candle.
+
+<img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f10a.png"> <img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f10b.png">
+
+- Bullish engulfing pattern: the open of a white candle must be below the low of the previous black candle and the close of the white candle must be above the high of the previous candle. Function: the difference between close and open price needs to be positive, the open is smaller than the low price of the previous candle, the close is bigger than the high price of the previous candle, and the difference of close and open price of previous day needs to be negative.
+
+<img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f11a.png"> <img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f11b.png">
+
+- Bearish engulfing pattern: the open of a black candle must be above the high of the previous white candle and the close of the black candle must be below the low of the previous candle. Function: the difference between close and open price needs to be negative, the open is bigger than the low price of the previous candle, the close is smaller than the high price of the previous candle, and the difference of close and open price of previous day needs to be postive.
+
+<img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f12a.png"> <img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f12b.png">
+
+- Tweezer top: a white candle follows by a black one with equal high price. Function: high equals the high price of the previous day, the difference of close and open price needs to be negative and the difference of close and open price of previous day candle needs to be positive.
+
+<img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f13a.png"> <img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f13b.png">
+
+- Tweezer bottom: a white candle follows by a black one with equal high price. Function: high equals the high price of the previous day, the difference of close and open price needs to be positive and the difference of close and open price of previous day candle needs to be negtative.
+
+<img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f14a.png"> <img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f14b.png">
+
+- Evening star reversal pattern: a white candle follows by two black candles. The low price of previous day candle is bigger than the high of the second previous day candle. The high price is smaller than the open of prveious day candle. Function: difference of close and open of the second previous day candle needs to be positve, for the previous and current day need to be negative. Low of previous day is smaller than high of second previous, high is smaller than open price of previous day.
+
+<img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f14a.png"> <img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f14b.png">
+
+- Morning star reversal pattern: a black candle follows by two white candles. The close price of previous day candle is smaller than the low of the second previous day candle. The high price of previous day is smaller than the open price. Function: difference of close and open of the second previous day candle needs to be negative, for the previous and current day need to be postive. Close of previous day is smaller than low of second previous, high of previous day is smaller than open price.
+
+<img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f14a.png"> <img width="415" height="350" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f14b.png">
+
+- Next, I created two different exponential moving averages: the 20 exponential moving average (moves slower) and the 50 exponential moving average (moves faser).
+
+- The last variable that I included in the data frame is "percent_change", which caculates the precentage of change of the closing price.
 
 
 ### [EDA](https://github.com/chilam27/Stock_Price_Prediction/blob/master/P04_EDA.py)
