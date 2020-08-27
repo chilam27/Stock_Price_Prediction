@@ -40,7 +40,7 @@ Packages: numpy, yfinance, mplfinance, random, pandas, matplotlib, seaborn, skle
 
 1. Data Wrangling: I got stock price data of HSBC bank from a Python library called `yfinance` and created 18 additional indicators acted as variables based on the stock prices. All candlestick related knowledge that I used is based on Jerremy's ebook: ["EVERYTHING YOU NEED TO KNOW ABOUT CANDLESTICKS"](https://dashboard.reallifetrading.com/assets/pdf/candlesticks.pdf).
 2. Exploratory Data Analysis (EDA): plotting three different plots showing: long-term trend, short-term trend, and current trend. I also created a candlestick chart using `mplfinance` library. Then, I implemented a simple trading plan only using moving averages and plotted it.
-3. Model Building: first, I normalized the data and split them into train and test data set. Then, I built a stacked LSTM model and plot the prediction. Lastly, I did the same step as previously but try to predict the prices of the next 30 days and plot it. The performance metric I used for my model is the mean squared error.
+3. Model Building: first, I normalized the data and split them into train and test data set. Then, I built a stacked LSTM model and plot the prediction. Lastly, I did the same step as previously but try to predict the prices of the next 30 days and plot it. The performance metric I used for my model is the root mean square error (RMSE).
 
 ### [Data Wrangling](https://github.com/chilam27/Stock_Price_Prediction/blob/master/P04_DataWrangling.py)
 
@@ -181,11 +181,31 @@ _Please note that, in some way, candlestick can be seen as a form of art: meanin
 
 ### [Model Building](https://github.com/chilam27/Stock_Price_Prediction/blob/master/P04_ModelBuilding.py)
 
+For this part of my project, I wanted to give the credit to Krish Natik for his "[Stock Price Prediction And Forecasting Using Stacked LSTM- Deep Learning](https://www.youtube.com/watch?v=H6du_pfuznE)" video on YouTube that helped me to understand the importance of each step in building a stacked LSTM algorithm. I also used the same structure as his in the video.
+
+- For the LSTM algorithm, the only variable that I will be using is the "Close" price. Because the algorithm is very sensitive to the scale of the data, the first thing I needed to do is to scale the data into numbers between 0 and 1 using `MinMaxScalar`.
+- To split the "Close" price data into train and test set, because this is a time series data, I will split the first 70% of the data to use it as my training data set and use the last 30% as my testing sata set.
+- Next, I implemented a function that performs data preprocessing and converting data array into matrix to the train and test data set with time step of 100.
+- Before building the model, I shaped my "X_train" and "X_test" data set because the LSTM model requires the input data to be reshaped to a three dimension as following: samples, time steps, features.
+- Then comes the model building. As for this stacked LSTM model (an extension of LSTM model with multiple hiddern layers), I used the "Sequential" model with an addtional of four layers:
+
+```python
+model = Sequential()
+model.add(LSTM(50, return_sequences = True, input_shape = (100,1)))
+model.add(LSTM(50, return_sequences = True))
+model.add(LSTM(50))
+model.add(Dense(1))
+model.compile(loss='mean_squared_error', optimizer = 'adam')
+```
 
 
 ### Overall Model Performance
 
+- After I applied the input data set into the model, I took the prediction from the model and reshaped it back to the original form and find the RMSE of the test and train data set. 
 
+.                     | Train Data Set   | Test Data Set
+:--------------------:|:----------------:|:--------------------------------:
+Root Mean Square Error| 32.3823361526875 | 34.503165661139754
 
 ## Conclusion
 
