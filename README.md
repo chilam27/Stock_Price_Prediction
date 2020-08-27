@@ -198,14 +198,30 @@ model.add(Dense(1))
 model.compile(loss='mean_squared_error', optimizer = 'adam')
 ```
 
+<p align="center">
+  <img width="700" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f21.png">
+</p>
+
+- I preapred two arrays of train and test predictions data by shifting the data to be able to graph it with the actual price.
+- Then, I plotted the actual price, the prediction of train data set and the prediction of the test dat set. The figure 22 showed a big picture of how good the accury is for the prediction is to the actual data. This means that with the current model, I could identify the general trend of the stock. Looking into it more closely with figure 23, here I only showed data of the last 10 days, it is now easier to see the precision of the prediction is not so great. There seems to be a little bit of a delay for the prediction in terms of changes happened to the stock prices.
+
+<img width="415" height="350" src="https://github.com/chilam27/Improved_Product_Review_System/blob/master/readme_image/fig22.png"> <img width="415" height="350" src="https://github.com/chilam27/Improved_Product_Review_System/blob/master/readme_image/fig23.png">
+
+- The last thing I tried to do with the project is to predict the next 30 days of the closing price of the HSBC stock. I used the code from Krish's YouTube video to perform this prediction. The steps for preparing the data (such as reshaping) and applying the input data set into the model is very similar as I did above. The only differnce for this part was adding the logic of continue to add the new price prediction into the input data set and make it keep predicting on a loop. In the end, the output of predictions looked like the figure below.
+
+<p align="center">
+  <img width="700" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f21.png">
+</p>
 
 ### Overall Model Performance
 
-- After I applied the input data set into the model, I took the prediction from the model and reshaped it back to the original form and find the RMSE of the test and train data set. 
+In the train and test data set predictions' performances, I took the prediction from the model and reshaped it back to the original form. The last step is to find the RMSE of the test and train data set by taking the square root of the "mean_squared_error" function:
 
 .                     | Train Data Set   | Test Data Set
-:--------------------:|:----------------:|:--------------------------------:
+:--------------------:|:----------------:|:-------------------:
 Root Mean Square Error| 32.3823361526875 | 34.503165661139754
+
+Because both RMSE of train and test data set are very closed and small, I can say that our model did very well in predicting the stock prices of HSBC (especially predicting the general trend of the future prices). But taking a look at the 30 days prediction, I would not depend on it too much. The further into the future the model has to guess, the less accurate and precise the prediction can be.
 
 ## Conclusion
 
