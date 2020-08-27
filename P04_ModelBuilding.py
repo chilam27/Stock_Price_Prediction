@@ -50,13 +50,12 @@ X_train, y_train = to_matrix(train, time_step)
 X_test, y_test = to_matrix(test, time_step)
 
 
-#Building model
-##Stacked LSTM model
-###Reshape input for model
+#Building a stacked LSTM model
+##Reshape input for model
 X_train = X_train.reshape(X_train.shape[0], X_train.shape[1], 1)
 X_test = X_test.reshape(X_test.shape[0], X_test.shape[1], 1)
 
-###Create model
+##Create model
 model = Sequential()
 model.add(LSTM(50, return_sequences = True, input_shape = (100,1)))
 model.add(LSTM(50, return_sequences = True))
@@ -67,9 +66,6 @@ model.compile(loss='mean_squared_error', optimizer = 'adam')
 model.summary()
 
 model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs = 100, batch_size= 64, verbose = 1)
-
-## model
-
 
 
 #Prediction
@@ -89,12 +85,12 @@ mean_squared_error(y_test, test_predict)**(1/2)
 ###Shift train predictions for plotting
 trainPredictPlot = np.empty_like(df_close)
 trainPredictPlot[:, :] = np.nan
-train_predict = trainPredictPlot[time_step:len(train_predict) + time_step, :]
+trainPredictPlot[time_step:len(train_predict) + time_step, :] = train_predict
 
 ###Shift test predictions for plotting
 testPredictPlot = np.empty_like(df_close)
 testPredictPlot[:, :] = np.nan
-test_predict = testPredictPlot[len(train_predict) + (time_step * 2) + 1:len(df_close) - 1, :]
+testPredictPlot[len(train_predict) + (time_step * 2) + 1:len(df_close) - 1, :] = test_predict
 
 ####Plot baseline and predictions
 train_flatten = trainPredictPlot.flatten()
@@ -110,7 +106,18 @@ plt.figure(figsize=(10,5))
 plt.plot(df_1.Close, label = 'Actual Price')
 plt.plot(df_predict.train_predict, label = 'Prediction of Train Data Set')
 plt.plot(df_predict.test_predict, label = 'Prediction of Test Data Set')
-plt.title('Figure n:', fontsize=15)
+plt.title('Figure 22: line graph of the actual price comparison with the train and test data set predictions', fontsize=15)
+plt.ylabel('Prices ($)')
+plt.xlabel('Year')
+plt.legend()
+plt.grid(color='grey', linestyle='--')
+plt.style.use("dark_background")
+plt.show()
+
+plt.figure(figsize=(10,5))
+plt.plot(df_1.Close[-10:], label = 'Actual Price')
+plt.plot(df_predict.test_predict[-10:], label = 'Prediction of Test Data Set')
+plt.title('Figure 23: line graph of the actual price comparison with the train and test data set predictions of the last 10 days', fontsize=15)
 plt.ylabel('Prices ($)')
 plt.xlabel('Year')
 plt.legend()
@@ -131,13 +138,13 @@ x = 0
 while(x < 30):
     if(len(temp_input) > 100):
         x_input = np.array(temp_input[1:])
-        print("{} day input {}".format(i,x_input))
+        print("{} day input {}".format(x,x_input))
         x_input = x_input.reshape(1,-1)
         x_input = x_input.reshape((1, time_step, 1))
         yhat = model.predict(x_input, verbose=0)
         print("{} day output {}".format(x,yhat))
         temp_input.extend(yhat[0].tolist())
-        temp_input=temp_input[1:]
+        temp_input = temp_input[1:]
         lst_output.extend(yhat.tolist())
         x = x + 1
     else:
@@ -161,7 +168,7 @@ for i in range(29):
 plt.figure(figsize=(10,5))
 plt.plot(df_1.Close[len(df_close)-100:], label = 'Actual Price')
 plt.plot(day_pred,norm.inverse_transform(lst_output), label = 'Prediction the Next 30 Days')
-plt.title('Figure n:', fontsize=15)
+plt.title('Figure 24: line graph of the actual price with the next 30 days predictions', fontsize=15)
 plt.ylabel('Prices ($)')
 plt.xlabel('Year')
 plt.legend()

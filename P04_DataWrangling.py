@@ -19,15 +19,16 @@ tickerData = yf.Ticker(tickerSymbol)
 df = tickerData.history(period='1d', start='1995-5-12', end='2020-7-27')
 
 
-#Data cleaning:
-tickerData.info
-tickerData.calendar
-recommendation = tickerData.recommendations
+#Data info:
+# tickerData.info
+# tickerData.calendar
+# recommendation = tickerData.recommendations
 
 
 #Feature engineer
 df.reset_index(level=0, inplace = True) # turn data frame index to column "Date"
 
+##Candle stick plot generator
 def candle_stick(var):
     ind = df.Date[df[var] == 1].index.tolist()
     if len(ind) > 2:
@@ -39,6 +40,12 @@ def candle_stick(var):
         df1 = df.iloc[lis[i]-10:lis[i]+10,:5]
         df1 = df1.set_index('Date')
         mpf.plot(df1, type = 'candle', title = var + str(i+1), ylabel='Price ($)')
+        
+##Average candle body size
+average_body = []
+for i in range(df.shape[0]):
+    body = abs(df.Open[i] - df.Close[i])
+    average_body.append(body)
 
 ##Doji/ spinning top/ high wave
 doji = []
@@ -55,7 +62,7 @@ df.doji_candle.value_counts()
 
 candle_stick('doji_candle')
     
-#Shaved bottom
+##Shaved bottom
 shaved_bottom = []
 for i in range(df.shape[0]):
     if df.Close[i] == df.Low[i]:
@@ -69,7 +76,7 @@ df.shaved_bottom.value_counts()
 
 candle_stick('shaved_bottom')
 
-#Shaved top
+##Shaved top
 shaved_top = []
 for i in range(df.shape[0]):
     if df.Open[i] == df.High[i]:
@@ -83,13 +90,9 @@ df.shaved_top.value_counts()
 
 candle_stick('shaved_top')
 
-#Bullish marubozu candle
-average_body = []
+##Bullish marubozu candle
 bull_marubozu = []
 bear_marubozu = []
-for i in range(df.shape[0]):
-    body = abs(df.Open[i] - df.Close[i])
-    average_body.append(body)
 
 for i in range(df.shape[0]):
     body = df.Close[i] - df.Open[i]
@@ -132,7 +135,7 @@ candle_stick('hammer_candle')
 ##Shooting star candle
 shooting_star = []
 for i in range(df.shape[0]):
-    if (df.Low[i] + (df.High[i] - df.Low[i])*0.1) >= df.Close[i] and (df.High[i] - df.Open[i]) > (abs(df.Open[i] - df.Close[i])*1.5):
+    if df.Low[i] >= df.Close[i] and (df.High[i] - df.Open[i]) > (abs(df.Open[i] - df.Close[i])*1.5):
         candle = 1
     else:
         candle = 0
@@ -144,19 +147,19 @@ df.shooting_star.value_counts()
 candle_stick('shooting_star')
 
 ##One white solider pattern
-white_solider = []
+white_soldier = []
 for i in range(df.shape[0]):
     body = df.Close[i] - df.Open[i]
     if body > 0 and abs(body) >= (np.mean(average_body)*1.5) and df.Open[i] > df.Close[i-1] and df.Close[i] > df.Open[i-1]:
         candle = 1
     else:
         candle = 0
-    white_solider.append(candle)
+    white_soldier.append(candle)
 
-df['white_solider'] = white_solider
-df.white_solider.value_counts()
+df['white_soldier'] = white_soldier
+df.white_soldier.value_counts()
 
-candle_stick('white_solider')
+candle_stick('white_soldier')
 
 ##One black crow
 black_crow = []
@@ -209,11 +212,12 @@ df.bear_engulf.value_counts()
 
 candle_stick('bear_engulf')
 
-#Tweezer top
+##Tweezer top
 tweezer_top = []
 for i in range(df.shape[0]):
+    body = df.Close[i] - df.Open[i]
     try:
-        if df.High[i-1] == df.High[i]:
+        if df.High[i-1] == df.High[i] and body < 0 and (df.Close[i-1] - df.Open[i-1]) > 0:
             candle = 1
         else:
             candle = 0
@@ -226,11 +230,12 @@ df.tweezer_top.value_counts()
 
 candle_stick('tweezer_top')
 
-#Tweezer bottom
+##Tweezer bottom
 tweezer_bottom = []
 for i in range(df.shape[0]):
+    body = df.Close[i] - df.Open[i]
     try:
-        if df.Low[i-1] == df.Low[i]:
+        if df.Low[i-1] == df.Low[i] and body > 0 and (df.Close[i-1] - df.Open[i-1]) < 0:
             candle = 1
         else:
             candle = 0
@@ -283,7 +288,7 @@ df.morning_star.value_counts()
 
 candle_stick('morning_star')
 
-##Exponential Moving average
+##Exponential moving average
 exp20 = df.Close.ewm(20).mean()
 exp105 = df.Close.ewm(105).mean()
 
