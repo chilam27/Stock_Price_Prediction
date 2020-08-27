@@ -205,12 +205,19 @@ model.compile(loss='mean_squared_error', optimizer = 'adam')
 - I preapred two arrays of train and test predictions data by shifting the data to be able to graph it with the actual price.
 - Then, I plotted the actual price, the prediction of train data set and the prediction of the test dat set. The figure 22 showed a big picture of how good the accury is for the prediction is to the actual data. This means that with the current model, I could identify the general trend of the stock. Looking into it more closely with figure 23, here I only showed data of the last 10 days, it is now easier to see the precision of the prediction is not so great. There seems to be a little bit of a delay for the prediction in terms of changes happened to the stock prices.
 
-<img width="415" height="350" src="https://github.com/chilam27/Improved_Product_Review_System/blob/master/readme_image/fig22.png"> <img width="415" height="350" src="https://github.com/chilam27/Improved_Product_Review_System/blob/master/readme_image/fig23.png">
+<p align="center">
+  <img width="700" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f22.png">
+</p>
+
+<p align="center">
+  <img width="700" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f23.png">
+</p>
+
 
 - The last thing I tried to do with the project is to predict the next 30 days of the closing price of the HSBC stock. I used the code from Krish's YouTube video to perform this prediction. The steps for preparing the data (such as reshaping) and applying the input data set into the model is very similar as I did above. The only differnce for this part was adding the logic of continue to add the new price prediction into the input data set and make it keep predicting on a loop. In the end, the output of predictions looked like the figure below.
 
 <p align="center">
-  <img width="700" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f21.png">
+  <img width="700" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f24.png">
 </p>
 
 ### Overall Model Performance
@@ -221,11 +228,13 @@ In the train and test data set predictions' performances, I took the prediction 
 :--------------------:|:----------------:|:-------------------:
 Root Mean Square Error| 32.3823361526875 | 34.503165661139754
 
-Because both RMSE of train and test data set are very closed and small, I can say that our model did very well in predicting the stock prices of HSBC (especially predicting the general trend of the future prices). But taking a look at the 30 days prediction, I would not depend on it too much. The further into the future the model has to guess, the less accurate and precise the prediction can be.
-
 ## Conclusion
 
+Because both RMSE of train and test data set are very closed and small, I can say that the model did very well in predicting the stock prices of HSBC (especially predicting the general trend of the future prices). But taking a look at the 30 days prediction, I would not depend on it too much. I am surprised to see that the model's prediction is opposite from mine: that the stock will go down in price. If this is true, it will be quite concerning for the bank because the stock price had not gone that low for years. Maybe the pandemic might affect the stock market in some way but I do not think that the model took the pandemic into the account here. All jokes aside, I could conclude that the further into the future the model has to guess, the less accurate and precise the prediction can be. I felt that this project would be very beneficial to those who are investors than traders. The reason being traders need precision while investors only need to know the trend of the stock price.
 
+Overall, I believed that I did a very good job of analyzing the HSBC stock and implementing the stacked LSTM model to predict the future close price. Something I could change if I revisit this project is to try different numbers of hidden layers for the model and the layers itself to see if it can better predict the price. I could also use a different performance metric, such as mean absolute error (MAE), to determine the performance of the model.
+
+If I were to continue this project, I would spend more time to develop a stronger trading plan that involves different special candlesticks/ patterns and presented it in the EDA section. It would also be very interesting to compare different models' performances (such as stacked LSTM and a different model where I can have the candlesticks/ patterns as variables instead of only the closing price) to see whether there is any model out there that can beat a deep learning model in predicting stock prices. 
 
 ## Author
 
