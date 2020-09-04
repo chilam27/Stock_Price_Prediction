@@ -4,7 +4,7 @@ Predicting HSBC Bank stock prices to make better buying/ selling decisions using
 
 ## Table of Contents
 
-* [Backgorund and Motivation](#backgorund-and-motivation)
+* [Background and Motivation](#background-and-motivation)
 * [Prerequisites](#prerequisites)
 * [Project Outline](#project-outline)
   * [Data Wrangling](#data-wrangling)
@@ -15,7 +15,7 @@ Predicting HSBC Bank stock prices to make better buying/ selling decisions using
 * [Author](#author)
 * [Acknowledgments](#acknowledgments)
 
-## Backgorund and Motivation
+## Background and Motivation
 
 > "The greatest risks are never the ones you can see and measure, but the ones you can't see and therefore can never measure. The ones that seem so far outside the boundary of normal probability that you can't imagine they could happend in your lifetime--even though, of course, they do happen, more often than you care to realize" - Joe Nocera
 
