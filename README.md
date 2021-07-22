@@ -17,16 +17,16 @@ Predicting HSBC Bank stock prices to make better buying/ selling decisions using
 
 ## Background and Motivation
 
-> "The greatest risks are never the ones you can see and measure, but the ones you can't see and therefore can never measure. The ones that seem so far outside the boundary of normal probability that you can't imagine they could happend in your lifetime--even though, of course, they do happen, more often than you care to realize" - Joe Nocera
+> "The greatest risks are never the ones you can see and measure, but the ones you can't see and therefore can never measure. The ones that seem so far outside the boundary of normal probability that you can't imagine they could happen in your lifetime--even though, of course, they do happen, more often than you care to realize" - Joe Nocera
 
-Recently, I took an interest in learning about the stock market and how day trading works. That was very odd of me considering countless times I heard people say that you will end up losing money when trading the market. But funny how a random guy on YouTube convinced me by saying something along the line of losing trades and losing trades but with risk management are two different things, one will make you lose money and the other will make you a better trader. Then, the YouTube channel that I used to learn about the topic and bet my future financial decision on is called [_Real Life Trading_](https://www.youtube.com/channel/UCux4_ZudBYgiZBPDvxVdhVQ) by the guy mentioned above, Jerremy Alexandar Newsome. Although the channel seems gimmicky at first, Jerremy did an excellent job of simplifying how the market and all of its basic (at least for the introduction course I am taking). Getting further into the material, I started to learn about different indicators that predict the stock movement and the meaning of those indicators. I was surprised to hear that, as a trader using mostly technical analysis to trade stock as Jerremy himself, those indicators that he taught me are things he considered the most when making his stock decisions.
+Recently, I took an interest in learning about the stock market and how day trading works. That was very odd of me considering countless times I heard people say that you will end up losing money when trading the market. But funny how a random guy on YouTube convinced me by saying something along the line of losing trades and losing trades but risk management are two different things, one will make you lose money and the other will make you a better trader. Then, the YouTube channel that I used to learn about the topic and bet my future financial decision on is called [_Real Life Trading_](https://www.youtube.com/channel/UCux4_ZudBYgiZBPDvxVdhVQ) by the guy mentioned above, Jerremy Alexandar Newsome. Although the channel seems gimmicky at first, Jerremy did an excellent job of simplifying how the market and all of its basics (at least for the introduction course I am taking). Getting further into the material, I started to learn about different indicators that predict the stock movement and the meaning of those indicators. I was surprised to hear that, as a trader using mostly technical analysis to trade stock as Jerremy himself, those indicators that he taught me are things he considered the most when making his stock decisions.
 
-As an aspiring data scientist, I saw that stock technical analysis is simply using past data to predict future outcomes. Since many of the supervised learning algorithms function the same way, I decided to see if I could apply one of the algorithms to a history of stock prices and predict what the future prices will be. I chose to apply the _Long short-term memory (LSTM)_ algorithm to predict the stock prices. My goal for this project is to see how accurate can a machine predict the stock market and therefore answers the question of whether I can depend on the prediction to make my trading decision. Here are two things I would like to learn our of this project:
+As an aspiring data scientist, I saw that stock technical analysis is simply using past data to predict future outcomes. Since many of the supervised learning algorithms function the same way, I decided to see if I could apply one of the algorithms to a history of stock prices and predict what the future prices will be. I chose to apply the _Long short-term memory (LSTM)_ algorithm to predict the stock prices. My goal for this project is to see how accurately can a machine predict the stock market and therefore answers the question of whether I can depend on the prediction to make my trading decision. Here are two things I would like to learn our of this project:
 
 1. Create technical analysis indicators on Python
 2. Learn how an artificial recurrent neural network (RNN), specifically LSTM, works
 
-_Disclaimer: I am no way shape or form an expert in trading the stock market and would not recommend anyone to use this model to base their trading/ investing decision._
+_Disclaimer: I am in no way shape or form an expert in trading the stock market and would not recommend anyone to use this model to base their trading/investing decision._
 
 ## Prerequisites
 
@@ -38,9 +38,9 @@ Packages: numpy, yfinance, mplfinance, random, pandas, matplotlib, seaborn, skle
 
 ## Project Outline
 
-1. Data Wrangling: I got stock price data of HSBC bank from a Python library called `yfinance` and created 18 additional indicators acted as variables based on the stock prices. All candlestick related knowledge that I used is based on Jerremy's ebook: ["EVERYTHING YOU NEED TO KNOW ABOUT CANDLESTICKS"](https://dashboard.reallifetrading.com/assets/pdf/candlesticks.pdf).
+1. Data Wrangling: I got stock price data of HSBC bank from a Python library called `yfinance` and created 18 additional indicators that acted as variables based on the stock prices. All candlestick-related knowledge that I used is based on Jerremy's ebook: ["EVERYTHING YOU NEED TO KNOW ABOUT CANDLESTICKS"](https://dashboard.reallifetrading.com/assets/pdf/candlesticks.pdf).
 2. Exploratory Data Analysis (EDA): plotting three different plots showing: long-term trend, short-term trend, and current trend. I also created a candlestick chart using `mplfinance` library. Then, I implemented a simple trading plan only using moving averages and plotted it.
-3. Model Building: first, I normalized the data and split them into train and test data set. Then, I built a stacked LSTM model and plot the prediction. Lastly, I did the same step as previously but try to predict the prices of the next 30 days and plot it. The performance metric I used for my model is the root mean square error (RMSE).
+3. Model Building: first, I normalized the data and split them into train and test data sets. Then, I built a stacked LSTM model and plot the prediction. Lastly, I did the same step as previously but try to predict the prices for the next 30 days and plot them. The performance metric I used for my model is the root mean square error (RMSE).
 
 ### [Data Wrangling](https://github.com/chilam27/Stock_Price_Prediction/blob/master/P04_DataWrangling.py)
 
@@ -52,11 +52,11 @@ Packages: numpy, yfinance, mplfinance, random, pandas, matplotlib, seaborn, skle
 
 - I turned the data frame index to a new column "Date".
 - To prepare for candlesticks visualization, I created a function ("candle_stick") with the `mplfinance` library embedded. This function will return a maximum of two candlestick plots of the candlestick's pattern. For easy use, I made it so whatever the candlestick or pattern will be the candle(s) in the middle of the graph. Along with it will be ten extra days of data before and after the candlestick/ pattern happened.
-- I created a list to get body sizes of every candle (the absolute value of the difference between the open and close price of the day). This became handy later on when I need to find the mean of body size.
+- I created a list to get the body sizes of every candle (the absolute value of the difference between the open and close price of the day). This became handy later on when I need to find the mean of body size.
 
-Below are formulas that I used to create different candlesticks/ patterns and their plots:
+Below are formulas that I used to create different candlesticks/patterns and their plots:
 
-_Please note that, in some way, candlestick can be seen as a form of art: meaning that there is no set in stone functions that define every candlesticks/ patterns. Functions I used for this project are very simple and straightforward._
+_Please note that, in some way, candlestick can be seen as a form of art: meaning that there are no set-in-stone functions that define every candlestick/pattern. Functions I used for this project are very simple and straightforward._
 
 - Doji candle: a candle without a body. Function: absolute value or the difference between the open and close price of the day equals zero.
 
@@ -76,49 +76,49 @@ _Please note that, in some way, candlestick can be seen as a form of art: meanin
   <img width="800" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f4.png">
 </p>
 
-- Bullish marubozu candle: white shaved bottom and top candle with a size much larger than the average candle. Function: the difference between close and open price need to be positive and bigger than the average candle by 1.5 times, high equals close and low equals open price of the day.
+- Bullish marubozu candle: white shaved bottom and top candle with a size much larger than the average candle. Function: the difference between close and open price need to be positive and bigger than the average candle by 1.5 times, high equals close, and low equals open price of the day.
 
 <p align="center">
   <img width="800" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f5.png">
 </p>
 
-- Bearish marubozu candle: black candle version of bullish marubozu candle. Function: the difference between close and open price need to be negative and bigger than the average candle by 1.5 times, high equals open and low equals close price of the day.
+- Bearish marubozu candle: black candle version of bullish marubozu candle. Function: the difference between close and open price need to be negative and bigger than the average candle by 1.5 times, high equals open, and low equals close price of the day.
 
 <p align="center">
   <img width="800" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f6.png">
 </p>
 
-- Hammer candle:  the lower wick of the candle should be about two times the size of the candle body; the candle still has a body but no upper wick. Function: high equals open price of the day, the difference of the close and low price is bigger than the difference between close and open prices multiplies by 1.5 times.
+- Hammer candle:  the lower wick of the candle should be about two times the size of the candle body; the candle still has a body but no upper wick. Function: high equals the open price of the day, the difference of the close and low price is bigger than the difference between close and open prices multiplies by 1.5 times.
 
 <p align="center">
   <img width="800" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f7.png">
 </p>
 
-- Shooting star candle: the inverted hammer candle. Function: low equals close price of the day, the difference between high and open price is bigger than the absolute value of the difference between open and close price multiplies by 1.5 times.
+- Shooting star candle: the inverted hammer candle. Function: low equals the close price of the day, the difference between the high and open price is bigger than the absolute value of the difference between open and close price multiplied by 1.5 times.
 
 <p align="center">
   <img width="800" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f8.png">
 </p>
 
-- One white soldier pattern: the open of a white candle has to be above the close of the previous day black candle and The close of the white candle has to be above the open of the previous day candle. Function: the difference between close and open price needs to be positive and bigger than the average candle by 1.5 times, open of the candle needs to be bigger than the close price of previous candle and close of the candle needs to be bigger than the open price of the previous candle.
+- One white soldier pattern: the open of a white candle has to be above the close of the previous day's black candle and The close of the white candle has to be above the open of the previous day's candle. Function: the difference between close and open price needs to be positive and bigger than the average candle by 1.5 times, open of the candle needs to be bigger than the close price of the previous candle, and close of the candle needs to be bigger than the open price of the previous candle.
 
 <p align="center">
   <img width="800" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f9.png">
 </p>
 
-- One black crow: the open of a black candle has to be below the close of the previous day and the close of the black candle has to be below the open of the previous day. Function: the difference between close and open price needs to be negative and its absolute value needs to be bigger than average candle by 1.5 times, open of the candle needs to be smaller than the close price of previous candle and close of the candle needs to be smaller than the open price of the previous candle.
+- One black crow: the open of a black candle has to be below the close of the previous day and the close of the black candle has to be below the open of the previous day. Function: the difference between close and open price needs to be negative and its absolute value needs to be bigger than the average candle by 1.5 times, open of the candle needs to be smaller than the close price of the previous candle and close of the candle needs to be smaller than the open price of the previous candle.
 
 <p align="center">
   <img width="800" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f10.png">
 </p>
 
-- Bullish engulfing pattern: the open of a white candle must be below the low of the previous black candle and the close of the white candle must be above the high of the previous candle. Function: the difference between close and open price needs to be positive, the open is smaller than the low price of the previous candle, the close is bigger than the high price of the previous candle, and the difference of close and open price of previous day needs to be negative.
+- Bullish engulfing pattern: the open of a white candle must be below the low of the previous black candle and the close of the white candle must be above the high of the previous candle. Function: the difference between close and open price needs to be positive, the open is smaller than the low price of the previous candle, the close is bigger than the high price of the previous candle, and the difference of close and open price of the previous day needs to be negative.
 
 <p align="center">
   <img width="800" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f11.png">
 </p>
 
-- Bearish engulfing pattern: the open of a black candle must be above the high of the previous white candle and the close of the black candle must be below the low of the previous candle. Function: the difference between close and open price needs to be negative, the open is bigger than the low price of the previous candle, the close is smaller than the high price of the previous candle, and the difference of close and open price of previous day needs to be positive.
+- Bearish engulfing pattern: the open of a black candle must be above the high of the previous white candle and the close of the black candle must be below the low of the previous candle. Function: the difference between close and open price needs to be negative, the open is bigger than the low price of the previous candle, the close is smaller than the high price of the previous candle, and the difference of close and open price of the previous day needs to be positive.
 
 <p align="center">
   <img width="800" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f12.png">
@@ -136,13 +136,13 @@ _Please note that, in some way, candlestick can be seen as a form of art: meanin
   <img width="800" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f14.png">
 </p>
 
-- Evening star reversal pattern: a white candle follows by two black candles. The low price of the previous day candle is bigger than the high of the second previous day candle. The high price is smaller than the open of previous day candle. Function: the difference of close and open of the second previous day candle needs to be positive, for the previous and current day needs to be negative. The low of previous day is smaller than high of second previous, high is smaller than open price of previous day.
+- Evening star reversal pattern: a white candle follows by two black candles. The low price of the previous day's candle is bigger than the high of the second previous day's candle. The high price is smaller than the open of the previous day's candle. Function: the difference of close and open of the second previous day candle needs to be positive, for the previous and current day needs to be negative. The low of the previous day is smaller than the high of the second previous, high is smaller than the open price of the previous day.
 
 <p align="center">
   <img width="800" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f15.png">
 </p>
 
-- Morning star reversal pattern: a black candle follows by two white candles. The close price of the previous day candle is smaller than the low of the second previous day candle. The high price of the previous day is smaller than the open price. Function: the difference of close and open of the second previous day candle needs to be negative, for the previous and current day needs to be positive. Close of the previous day is smaller than low of second previous, high of the previous day is smaller than open price.
+- Morning star reversal pattern: a black candle follows by two white candles. The close price of the previous day's candle is smaller than the low of the second previous day's candle. The high price of the previous day is smaller than the open price. Function: the difference of close and open of the second previous day candle needs to be negative, for the previous and current day needs to be positive. Close of the previous day is smaller than low of second previous, high of the previous day is smaller than the open price.
 
 <p align="center">
   <img width="800" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f16.png">
@@ -155,7 +155,7 @@ _Please note that, in some way, candlestick can be seen as a form of art: meanin
 
 ### [EDA](https://github.com/chilam27/Stock_Price_Prediction/blob/master/P04_EDA.py)
 
-- To determine whether the stock is good to buy, the first thing I needed to do is to look at the overall trend (long-term) of the stock price history. The line graph below shows that the overall trend of this stock is sideways, which is not bad because at least it is not going down. The stock had its highest price in 2007 at around $55 and fell rapidly at the end of 2008 to around $12 (probably due to the Great Recession happened in that period). From there, its pattern is quite predictable. Based on the graph, assume that there is not an event that causes a severe change to the market (like the current pandemic), the stock is very likely to bounce back up to the $38 price mark. I would be very interested in this particular stock if I am a trader compare to an investor.
+- To determine whether the stock is good to buy, the first thing I needed to do is to look at the overall trend (long-term) of the stock price history. The line graph below shows that the overall trend of this stock is sideways, which is not bad because at least it is not going down. The stock had its highest price in 2007 at around $55 and fell rapidly at the end of 2008 to around $12 (probably due to the Great Recession that happened in that period). From there, its pattern is quite predictable. Based on the graph, assume that there is not an event that causes a severe change to the market (like the current pandemic), the stock is very likely to bounce back up to the $38 price mark. I would be very interested in this particular stock if I am a trader compare to an investor.
 
 <p align="center">
   <img width="900" height="500" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f17.png">
@@ -167,7 +167,7 @@ _Please note that, in some way, candlestick can be seen as a form of art: meanin
   <img width="900" height="500" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f18.png">
 </p>
 
-- Since I knew what I should do with the stock, then the next challenge is to figure out where to enter the trade. Based on the course I took from Jerremy, I need to look for an indicator. A specific candlestick/ pattern that indicates the stock will go up (or go bullish). I created even a smaller picture, a line graph of stock price history for the last 30 days, to look out for details. Since I couldn't add markers on to the candlestick graph, I labelled it in the line graph below with a different colors' marker to spot the special candlestick/ pattern. In the line graph, there were a couple of candlesticks/ patterns appeared in the last 30 days: shaved bottom candles, white soldier pattern, bull engulfing pattern, and evening star reversal pattern. Beside the fact that those candlessticks/ patterns did not affect the trend much, there wasn't any indicator coming up in the past week, I should be patient and wait for now.
+- Since I knew what I should do with the stock, then the next challenge is to figure out where to enter the trade. Based on the course I took from Jerremy, I need to look for an indicator. A specific candlestick/ pattern that indicates the stock will go up (or go bullish). I created even a smaller picture, a line graph of stock price history for the last 30 days, to look out for details. Since I couldn't add markers to the candlestick graph, I labeled it in the line graph below with a different colors marker to spot the special candlestick/ pattern. In the line graph, there were a couple of candlesticks/ patterns appeared in the last 30 days: shaved bottom candles, white soldier pattern, bull engulfing pattern, and evening star reversal pattern. Besides the fact that those candlesticks/patterns did not affect the trend much, there wasn't any indicator coming up in the past week, I should be patient and wait for now.
 
 <p align="center">
   <img width="900" height="500" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f19.png">
@@ -181,13 +181,13 @@ _Please note that, in some way, candlestick can be seen as a form of art: meanin
 
 ### [Model Building](https://github.com/chilam27/Stock_Price_Prediction/blob/master/P04_ModelBuilding.py)
 
-For this part of my project, I wanted to give the credit to Krish Natik for his "[Stock Price Prediction And Forecasting Using Stacked LSTM- Deep Learning](https://www.youtube.com/watch?v=H6du_pfuznE)" video on YouTube that helped me to understand the importance of each step in building a stacked LSTM algorithm. I also used the same structure as his in the video.
+For this part of my project, I wanted to give credit to Krish Natik for his "[Stock Price Prediction And Forecasting Using Stacked LSTM- Deep Learning](https://www.youtube.com/watch?v=H6du_pfuznE)" video on YouTube that helped me to understand the importance of each step in building a stacked LSTM algorithm. I also used the same structure as his in the video.
 
 - For the LSTM algorithm, the only variable that I will be using is the "Close" price. Because the algorithm is very sensitive to the scale of the data, the first thing I needed to do is to scale the data into numbers between 0 and 1 using `MinMaxScalar`.
-- To split the "Close" price data into train and test set, because this is a time series data, I will split the first 70% of the data to use it as my training data set and use the last 30% as my testing sata set.
-- Next, I implemented a function that performs data preprocessing and converting data array into matrix to the train and test data set with time step of 100.
-- Before building the model, I shaped my "X_train" and "X_test" data set because the LSTM model requires the input data to be reshaped to a three dimension as following: samples, time steps, features.
-- Then comes the model building. As for this stacked LSTM model (an extension of LSTM model with multiple hiddern layers), I used the "Sequential" model with an addtional of four layers:
+- To split the "Close" price data into train and test sets, because this is time-series data, I will split the first 70% of the data to use it as my training data set and use the last 30% as my testing data set.
+- Next, I implemented a function that performs data preprocessing and converting data array into a matrix to the train and test data set with a time step of 100.
+- Before building the model, I shaped my "X_train" and "X_test" data set because the LSTM model requires the input data to be reshaped to a three-dimension as following: samples, time steps, features.
+- Then comes the model building. As for this stacked LSTM model (an extension of LSTM model with multiple hidden layers), I used the "Sequential" model with an additional of four layers:
 
 ```python
 model = Sequential()
@@ -202,8 +202,8 @@ model.compile(loss='mean_squared_error', optimizer = 'adam')
   <img width="700" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f21.png">
 </p>
 
-- I preapred two arrays of train and test predictions data by shifting the data to be able to graph it with the actual price.
-- Then, I plotted the actual price, the prediction of train data set and the prediction of the test dat set. The figure 22 showed a big picture of how good the accury is for the prediction is to the actual data. This means that with the current model, I could identify the general trend of the stock. Looking into it more closely with figure 23, here I only showed data of the last 10 days, it is now easier to see the precision of the prediction is not so great. There seems to be a little bit of a delay for the prediction in terms of changes happened to the stock prices.
+- I prepared two arrays of train and test predictions data by shifting the data to be able to graph it with the actual price.
+- Then, I plotted the actual price, the prediction of the train data set, and the prediction of the test data set. Figure 22 showed a big picture of how good the accuracy is for the prediction is to the actual data. This means that with the current model, I could identify the general trend of the stock. Looking into it more closely with figure 23, here I only showed data of the last 10 days, it is now easier to see the precision of the prediction is not so great. There seems to be a little bit of a delay in the prediction in terms of changes that happened to the stock prices.
 
 <p align="center">
   <img width="700" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f22.png">
@@ -214,7 +214,7 @@ model.compile(loss='mean_squared_error', optimizer = 'adam')
 </p>
 
 
-- The last thing I tried to do with the project is to predict the next 30 days of the closing price of the HSBC stock. I used the code from Krish's YouTube video to perform this prediction. The steps for preparing the data (such as reshaping) and applying the input data set into the model is very similar as I did above. The only differnce for this part was adding the logic of continue to add the new price prediction into the input data set and make it keep predicting on a loop. In the end, the output of predictions looked like the figure below.
+- The last thing I tried to do with the project is to predict the next 30 days of the closing price of the HSBC stock. I used the code from Krish's YouTube video to perform this prediction. The steps for preparing the data (such as reshaping) and applying the input data set into the model are very similar as I did above. The only difference for this part was adding the logic of continuing to add the new price prediction into the input data set and make it keep predicting on a loop. In the end, the output of predictions looked like the figure below.
 
 <p align="center">
   <img width="700" height="400" src="https://github.com/chilam27/Stock_Price_Prediction/blob/master/readme_image/f24.png">
@@ -234,7 +234,7 @@ Because both RMSE of train and test data set are very closed and small, I can sa
 
 Overall, I believed that I did a very good job of analyzing the HSBC stock and implementing the stacked LSTM model to predict the future close price. Something I could change if I revisit this project is to try different numbers of hidden layers for the model and the layers itself to see if it can better predict the price. I could also use a different performance metric, such as mean absolute error (MAE), to determine the performance of the model.
 
-If I were to continue this project, I would spend more time to develop a stronger trading plan that involves different special candlesticks/ patterns and presented it in the EDA section. It would also be very interesting to compare different models' performances (such as stacked LSTM and a different model where I can have the candlesticks/ patterns as variables instead of only the closing price) to see whether there is any model out there that can beat a deep learning model in predicting stock prices. 
+If I were to continue this project, I would spend more time developing a stronger trading plan that involves different special candlesticks/ patterns and presented it in the EDA section. It would also be very interesting to compare different models' performances (such as stacked LSTM and a different model where I can have the candlesticks/ patterns as variables instead of only the closing price) to see whether there is any model out there that can beat a deep learning model in predicting stock prices. 
 
 ## Author
 
